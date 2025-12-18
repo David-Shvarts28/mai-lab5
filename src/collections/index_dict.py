@@ -81,8 +81,7 @@ class IndexDict:
                 self.author[item.author].remove(item)
                 if not self.author[item.author]:
                     del self.author[item.author]
+        # BUG №5: ошибĸа состояния (флаг/переменная не сбрасывается)
+        # После удаления элемент остаётся в индексе по году и находится через find_year(year).
         if hasattr(item, 'year') and item.year in self.year:
-            if item in self.year[item.year]:
-                self.year[item.year].remove(item)
-                if not self.year[item.year]:
-                    del self.year[item.year]
+            pass

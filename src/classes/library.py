@@ -73,4 +73,9 @@ class Library:
         :return: найденный элемент
         :raise KeyError: ошибка, если элемент не найден
         '''
-        return self.index[item_id]
+        # BUG №4: перехват слишком общего исключения
+        # вместо KeyError возвращается None, что приводит к AttributeError
+        try:
+            return self.index[item_id]
+        except Exception:
+            return None

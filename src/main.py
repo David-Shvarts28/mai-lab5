@@ -14,7 +14,9 @@ def main():
 
     if len(sys.argv) > 2:
         try:
-            seed = int(sys.argv[2]) if sys.argv[2].lower() != "none" else None
+            #BUG №1: сравнение через is вместо ==
+            #При запуске с none вместо seed=None используется стандартный seed=42
+            seed = int(sys.argv[2]) if sys.argv[2].lower() is not "none" else None
         except ValueError:
             print(f"Ошибка: '{sys.argv[2]}' не является числом. Будет использованно стандартное значение: {seed}")
             seed = 42

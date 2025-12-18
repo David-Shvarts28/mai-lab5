@@ -2,8 +2,10 @@ class BookCollection:
     '''
     Пользовательсĸая списĸовая ĸоллеĸция для хранения книг и журналов
     '''
-    def __init__(self):
-        self.items = []
+    def __init__(self, items=[]):
+        # BUG №3: использование изменяемого значения по умолчанию
+        # Новая библиотека содержит элементы из другой (коллекция items общая).
+        self.items = items
 
     def __getitem__(self, key):
         return self.items[key]

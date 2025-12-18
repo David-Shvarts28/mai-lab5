@@ -165,6 +165,43 @@ def try_nonexist(library: Library) -> str:
         stat = "не найден"
     return f"Поиск несуществующего ID '{fk}': {stat}"
 
+def share_check(library: Library) -> str:
+    '''
+    Используется для воспроизведения бага с изменяемым значением в BookCollection.
+    :param library: библиотека
+    :return: сообщение о результате поиска
+    '''
+    other = Library("Другая библиотека")
+    return f"Проверка: текущая={len(library)}, новая={len(other)}"
+
+
+def year_index(library: Library) -> str:
+    '''
+    Используется для воспроизведения бага: year не очищается при удалении.
+    :param library: библиотека
+    :return: сообщение о результате поиска
+    '''
+    if len(library) == 0:
+        return "Проверка: библиотека пуста"
+    item = random.choice(library.items)
+    year = getattr(item, "year", None)
+    library.remove_item(item)
+    if year is None:
+        return "Проверка: у элемента нет year"
+    start = len(library.find_year(year))
+    return f"Проверка после удаления: год={year}, найдено={start}"
+
+
+def miss_id(library: Library) -> str:
+    '''
+    Используется для воспроизведения бага: перехват исключения приводит к ошибке.
+    :param library: библиотека
+    :return: сообщение о результате поиска
+    '''
+    fk = f"CRASH-{random.randint(1000, 9999)}"
+    item = library.find_id(fk) # при баге вернётся None
+    return f"Найдено: {item.title}"
+
 
 def run_simulation(steps: int = 20, seed: int | None = None) -> None:
     '''
@@ -186,10 +223,15 @@ def run_simulation(steps: int = 20, seed: int | None = None) -> None:
         search_genre,
         update_index,
         check_item,
-        try_nonexist
+        try_nonexist,
+        share_check,
+        year_index,
+        miss_id,
     ]
 
-    for i in range(steps):
+    #BUG №2: ошибĸа границы циĸла (off-by-one)
+    # при steps=1 выполняется 2 шага (на 1 больше)
+    for i in range(steps + 1):
         mp = random.choice(all_mp)
         message = mp(library)
         print(f"[Шаг {i+1}] {message}")
