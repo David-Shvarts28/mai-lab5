@@ -20,7 +20,7 @@ python3 -m src.main 5 none
 
 Отладка:  
 Установить breakpoint на строке: `seed = int(sys.argv[2]) if sys.argv[2].lower() is not "none" else None`  
-Проверить в отладчике значения `sys.argv`, `sys.argv[2]`, `sys.argv[2].lower()` и убедиться, что выполняется неверная ветка и попадаем в `except ValueError`.
+Проверить в отладчике значения `sys.argv`, `sys.argv[2]`, `sys.argv[2].lower()` и убедиться, что попадаем в `except ValueError`.
 
 Причина:  
 Использовано сравнение `is` вместо `==`.
@@ -52,10 +52,10 @@ python3 -m src.main 1 42
 
 Отладка:  
 Установить breakpoint на строке `for i in range(steps + 1):`.  
-Проверить `steps` и `i`: на последней итерации будет `i == steps`, что и даёт лишний шаг.
+Проверить `steps` и `i`: на последней итерации будет `i == steps`, лишний шаг.
 
 Причина:  
-Неверная граница цикла (`range(steps + 1)` вместо `range(steps)`).
+Неверная граница цикла `range(steps + 1)` вместо `range(steps)`.
 
 Исправление:  
 Заменить `range(steps + 1)` на `range(steps)`.
@@ -72,7 +72,7 @@ python3 -m src.main 1 42
 
 Место: `src/collections/book_collection.py`, метод `BookCollection.__init__`  
 
-Симптом: новая библиотека неожиданно содержит элементы из другой (коллекция `items` “общая”).
+Симптом: новая библиотека содержит элементы из другой (коллекция `items` общая).
 
 Как воспроизвести:  
 
@@ -100,7 +100,7 @@ python3 -m src.main 12 1
 
 ### Ошибка 4 — перехват слишком общего исключения
 
-Место: `src/classes/library.py`, метод `find_id`  
+Место: `src/classes/library.py`, функция `find_id`  
 
 Симптом: вместо `KeyError` возвращается `None`, что приводит к `AttributeError` в симуляции.
 
@@ -113,7 +113,7 @@ python3 -m src.main 12 1
 Отладка:  
 Установить breakpoint на `except Exception:` в `find_id`.  
 Убедиться, что `KeyError` перехвачен, и функция возвращает `None`.  
-В стеке видно падение у `None` (`AttributeError`).
+Видно падение у `None` (`AttributeError`).
 
 Причина:  
 Перехватывается слишком общее исключение (`Exception`).
@@ -131,7 +131,7 @@ python3 -m src.main 12 1
 
 ### Ошибка 5 — ошибĸа состояния (флаг/переменная не сбрасывается)
 
-Место: `src/collections/index_dict.py`, метод `remove_item`  
+Место: `src/collections/index_dict.py`, функция `remove_item`  
 
 Симптом: после удаления элемент остаётся в индексе по году и находится через `find_year(year)`.
 
@@ -146,7 +146,7 @@ python3 -m src.main 12 0
 Проверить `self.year[item.year]` до и после удаления — список не меняется.
 
 Причина:  
-Код удаления из `self.year[year]` не выполняется, индекс остаётся.
+Код удаления не выполняется, индекс остаётся.
 
 Исправление:  
 Восстановить удаление элемента из `self.year[year]` и очистку пустых списков.
