@@ -127,8 +127,6 @@ python3 -m src.main 12 1
 Доказательства:
 ![](screenshots/bug4_breakpoint.png)
 
-![](screenshots/bug4_locals.png)
-
 ![](screenshots/bug4_output.png)
 
 ### Ошибка 5 — ошибĸа состояния (флаг/переменная не сбрасывается)
